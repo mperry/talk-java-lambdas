@@ -18,7 +18,9 @@
 		<link rel="stylesheet" href="css/theme/simple.css" id="theme">
 
 		<!-- For syntax highlighting -->
-		<link rel="stylesheet" href="lib/css/zenburn.css">
+		<!--<link rel="stylesheet" href="lib/css/zenburn.css">-->
+		<link rel="stylesheet" href="http://yandex.st/highlightjs/7.5/styles/default.min.css">
+		<script src="http://yandex.st/highlightjs/7.5/highlight.min.js"></script>
 
 		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
 		<script>
@@ -61,6 +63,164 @@
 							</tr>
 						</table>
 					</center>
+				</section>
+
+				<section>
+					<h2>Schedule</h2>
+					Schedule adopted in April 2013
+					<ul>
+						<li>M1 - Apr 12</li>
+						<li>M2 - Jun 12</li>
+						<li>M3 - Aug 12</li>
+						<li>M4 - Sep 12</li>
+						<li>M5 - Nov 12</li>
+						<li>M6 - Jan 13</li>
+						<li>M7 - Jun 13 - Feature Complete</li>
+						<li>M8 - Sep 13 - Developer Preview</li>
+						<li>M9 - Jan 13 - Final Release Candidate</li>
+						<li>GA - Mar 13 - General Availability</li>
+					</ul>
+					<p>
+						<small>http://openjdk.java.net/projects/jdk8/</small>
+					</p>
+
+				</section>
+
+				<section>
+					<h2>Java 8 Features</h2>
+					<ul>
+						<li>Lambdas</li>
+						<li>java.time (Joda Time)</li>
+						<li>Nashorn JavaScript Engine</li>
+						<li>Additions to:
+							<ul>
+								<li>Collections</li>
+								<li>Concurrency</li>
+								<li>IO and Native IO</li>
+								<li>Reflection and annotations</li>
+							</ul>
+						</li>
+					</ul>
+
+					<p>
+						<small>
+							<ul>
+								<li>http://openjdk.java.net/projects/jdk8/features</li>
+								<li>http://www.techempower.com/blog/2013/03/26/everything-about-java-8/</li>
+							</ul>
+						</small>
+					</p>
+				</section>
+
+				<section>
+					<h2>Rationale</h2>
+					<ul>
+						<li>Provide collections with higher order functions</li>
+						<li>Sequential or parallel operations</li>
+						<li>Anonymous classes have bulky syntax</li>
+					</ul>
+					<pre><code class="java">
+// given the interface
+interface Consumer&lt;T&gt; { void accept(T t); }
+
+
+// Java 7
+pointList.forEach(new Consumer&lt;Point&gt;() {
+    public void accept(Point p) {
+        p.move(p.y, p.x);
+    }
+});
+
+// Java 8
+pointList.forEach(p -> p.move(p.y, p.x));
+		</code></pre>
+				</section>
+
+
+				<section>
+					<h2>Lambda Expressions?</h2>
+
+					<p>A function that computes an output for some combination of input values</p>
+
+					<ul>
+						<li>(parameters) -> expression</li>
+						<li>(parameters) -> { statements; }</li>
+					</ul>
+
+					<pre><code class="java">
+(int x, int y) -> x + y
+(x, y) -> x + y
+() -> 42
+(String s) -> System.out.println(s)
+c -> { int s = c.size(); c.clear(); return s; }
+					</code></pre>
+
+				</section>
+
+				<section>
+					<h2>Functional Interfaces</h2>
+					<ul>
+						<li>Type where a lambda can be used as the argument value</li>
+						<li>public void forEach(Consumer<? super T> consumer);</li>
+						<li>Interface with one abstract method</li>
+						<li>Sometimes called SAM - Single Abstract Method</li>
+					</ul>
+
+				</section>
+
+				<section>
+					<h2>Lambda Typing</h2>
+
+					<ul>
+						<li>Type of lambdas depends on context</li>
+						<li>What is the type of: x -> 2 * x ?</li>
+						<li>Target typing</li>
+					</ul>
+					<pre><code class="java">
+ActionListener l = (ActionEvent e) -> ui.dazzle(e.getModifiers());
+
+interface IntOperation { int operate(int i); }
+IntOperation iop = x -> x + 2
+interface DoubleOperation { int operate(int i); }
+DoubleOperation dop = x -> x + 2
+					</code></pre>
+
+				</section>
+
+				<section>
+					<h2>Targets</h2>
+
+					<ul>
+						<li>Method or constructor arguments</li>
+						<li>Variables declarations</li>
+						<li>Return statments</li>
+						<li>Assignments</li>
+						<li>Array initializer</li>
+						<li>Lambda expression bodies</li>
+						<li>Ternary operator (?:) </li>
+						<li>Casts</li>
+					</ul>
+
+				</section>
+
+				<section>
+					<h2>Default Methods</h2>
+
+					<ul>
+						<li>Interfaces can have implementations</li>
+						<li>Multiple inheritance without state</li>
+					</ul>
+
+				</section>
+
+				<section>
+					<h2>Not covered</h2>
+					<ol>
+						<li>Lexical Scoping</li>
+						<li>Variable Capture</li>
+						<li>Method references</li>
+					</ol>
+
 				</section>
 
 				<section>
