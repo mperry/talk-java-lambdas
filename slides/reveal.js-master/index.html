@@ -41,13 +41,11 @@
 
 				<section>
 					<h2>Are Lambdas Great in Java 8?</h2>
-					<h3>Functional Programming in Scala</h3>
-
 					<p>
 						<small>
 							Created by Mark Perry,
 							<a href="http://twitter.com/mprry">@mprry</a>,
-							<a href="https://plus.google.com/u/0/103753917802203497881/about/p/pub">G+</a>,
+							<a href="https://plus.google.com/103753917802203497881">G+</a>,
 							<a href="http://mperry.github.io/">Blog</a>,
 							<a href="http://www.linkedin.com/in/maperry78">LinkedIn</a>,
 							<a href="https://github.com/mperry">GitHub</a>,
@@ -57,28 +55,34 @@
 					<center>
 						<table cellspacing="40">
 							<tr>
-								<td ><img src="../../images/scala_book.png" height="150"></td>
-								<td><img src="../../images/author_small.png" height="150"></td>
-								<td><img src="../../images/lambda_thin.png" height="150"></td>
+                                <td><img src="images/lambda_thin.png" height="150"></td>
+								<td><img src="images/author_small.png" height="150"></td>
+
 							</tr>
 						</table>
 					</center>
 				</section>
 
+
+                <section>
+                    <h2>Topics</h2>
+                    <ul>
+                        <li>Lambda expressions</li>
+                        <li>Functional interfaces</li>
+                        <li>Default methods</li>
+                        <li>Stream</li>
+                        <li>Library support</li>
+                    </ul>
+                </section>
+
 				<section>
 					<h2>Schedule</h2>
 					Schedule adopted in April 2013
 					<ul>
-						<li>M1 - Apr 12</li>
-						<li>M2 - Jun 12</li>
-						<li>M3 - Aug 12</li>
-						<li>M4 - Sep 12</li>
-						<li>M5 - Nov 12</li>
-						<li>M6 - Jan 13</li>
-						<li>M7 - Jun 13 - Feature Complete</li>
-						<li>M8 - Sep 13 - Developer Preview</li>
-						<li>M9 - Jan 13 - Final Release Candidate</li>
-						<li>GA - Mar 13 - General Availability</li>
+                        <li>Java 7 launched July 7, 2011</li>
+						<li>M8 - Sep 5 - Developer Preview</li>
+						<li>M9 - Jan 23 - Final Release Candidate</li>
+						<li>GA - Mar 18 - General Availability</li>
 					</ul>
 					<p>
 						<small>http://openjdk.java.net/projects/jdk8/</small>
@@ -112,17 +116,119 @@
 					</p>
 				</section>
 
-				<section>
-					<h2>Rationale</h2>
-					<ul>
-						<li>Provide collections with higher order functions</li>
-						<li>Sequential or parallel operations</li>
-						<li>Anonymous classes have bulky syntax</li>
-					</ul>
-					<pre><code class="java">
-// given the interface
-interface Consumer&lt;T&gt; { void accept(T t); }
+                <section>
+                    <h2>What's a Lambda?</h2>
+                    <p>
+                        <img src="images/lambda.png" border="0"/>
+                    </p>
+                    <ul>
+                        <li>Greek letter</li>
+                        <li>Alonzo Church discovered lambda calculus in 30s</li>
+                        <li>multiply = λ x y . x * y</li>
+                        <li>true = λ x y . x</li>
+                    </ul>
+                    <p>
+                        <img src="images/church.jpg" height="200"/>
+                    </p>
+                </section>
 
+                <section>
+                    <h2>Background</h2>
+                    <ul>
+                        <li>Productivity = Reuse
+                            <ul>
+                                <li>Combine smaller units</li>
+                                <li>Avoid mutation</li>
+                            </ul>
+                        </li>
+                        <li>Problems:
+                            <ul>
+                                <li>Java is object oriented</li>
+                                <li>Encapsulation and mutation</li>
+                                <li>Classes are heavyweight</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Avoid Mutation</h2>
+      <pre><code class="java">
+class Cafe {
+    // mutation
+    Coffee buyCoffee(CreditCard cc, Payments p) {
+        Coffee cup = new Coffee();
+        p.charge(cc, cup.getPrice());
+        return cup;
+    }
+
+    // referentially transparent
+    P2&lt;Coffee, Charge&gt; buyCoffee2(CreditCard cc) {
+        Coffee cup = new Coffee()
+        return P.p(cup, new Charge(cc, cup.getPrice()));
+    }
+}
+          </code></pre>
+                </section>
+
+				<section>
+					<h2>Lambda Rationale</h2>
+                    <ul>
+                        <li>Concise function syntax</li>
+                        <li>Higher order functions for collections</li>
+                        <li>Sequential and parallel operations</li>
+                        <li>Move towards functional programming</li>
+                    </ul>
+                </section>
+
+
+                <section>
+                <h2>Function Brevity</h2>
+                    <pre><code class="java">
+// Java 7
+execute(new Runnable(){
+    public void run() {
+        processImage(image);
+    }
+});
+button.addActionListener(new ActionListener(){
+    @Override
+    public void actionPerformed(ActionEvent event) {
+        setBackground(Color.GREEN);
+    }
+});
+// Java 8
+execute(() -> processImage(image));
+button.addActionListener(e -> setBackground(Color.GREEN));)
+                </code></pre>
+                </section>
+
+                <section>
+                    <h2>Function Brevity</h2>
+                    <pre><code class="java">
+// Sort strings by length, Java 7
+Arrays.sort(array, new Comparator&lt;String&gt;() {
+    @Override
+    public int compare(String s1, String, s2) {
+        return s1.length() - s2.length();
+    }
+}
+
+// Java 8
+Arrays.sort(array, (s1, s2) -> s1.length() - s2.length());
+
+
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Function Brevity</h2>
+
+					<pre><code class="java">
+// Collection.forEach
+void forEach(Consumer&lt;? super T&gt; c) { ... }
+
+interface Consumer&lt;T&gt; { void accept(T t); }
 
 // Java 7
 pointList.forEach(new Consumer&lt;Point&gt;() {
@@ -136,48 +242,67 @@ pointList.forEach(p -> p.move(p.y, p.x));
 		</code></pre>
 				</section>
 
-
 				<section>
-					<h2>Lambda Expressions?</h2>
-
-					<p>A function that computes an output for some combination of input values</p>
-
+					<h2>Lambda Expressions</h2>
 					<ul>
 						<li>(parameters) -> expression</li>
 						<li>(parameters) -> { statements; }</li>
 					</ul>
 
 					<pre><code class="java">
+(int x) -> 2 * x
+x -> 2 * x
 (int x, int y) -> x + y
 (x, y) -> x + y
 () -> 42
-(String s) -> System.out.println(s)
-c -> { int s = c.size(); c.clear(); return s; }
+c -> {
+    int s = c.size();
+    c.clear();
+    return s;
+}
 					</code></pre>
-
 				</section>
 
 				<section>
 					<h2>Functional Interfaces</h2>
 					<ul>
-						<li>Type where a lambda can be used as the argument value</li>
+                        <li>Interface with one abstract method</li>
+						<li>Generally, call with a lambda</li>
 						<li>public void forEach(Consumer<? super T> consumer);</li>
-						<li>Interface with one abstract method</li>
 						<li>Sometimes called SAM - Single Abstract Method</li>
+                        <li>Enforced with @FunctionalInterface</li>
+                        <li>Runnable, Callable, Comparator, etc.</li>
 					</ul>
-
 				</section>
+
+                <section>
+                    <h2>Function Package</h2>
+                    <pre><code class="java">
+// java.util.function
+
+Function&lt;A, B&gt; // transform A to B
+Predicate&lt;T&gt; // boolean testing, Function&lt;T, Boolean&gt;
+Consumer&lt;T&gt; // perform actions, Function&lt;T, Void&gt;
+Supplier&lt;T&gt; // provide T, Function&lt;Void, T&gt;
+UnaryOperator&lt;T&gt; // Function&lt;T, T&gt;
+
+BiFunction&lt;A, B, C&gt;
+BinaryOperator&lt;T&gt; // BiFunction&lt;T, T, T&gt;
+// and others...
+
+                        </code></pre>
+                </section>
 
 				<section>
 					<h2>Lambda Typing</h2>
-
 					<ul>
-						<li>Type of lambdas depends on context</li>
-						<li>What is the type of: x -> 2 * x ?</li>
+						<li>Type depends on context</li>
+						<li>Type of: x -> 2 * x ?</li>
 						<li>Target typing</li>
 					</ul>
 					<pre><code class="java">
 ActionListener l = (ActionEvent e) -> ui.dazzle(e.getModifiers());
+ActionListener l = e -> ui.dazzle(e.getModifiers());
 
 interface IntOperation { int operate(int i); }
 IntOperation iop = x -> x + 2
@@ -187,72 +312,389 @@ DoubleOperation dop = x -> x + 2
 
 				</section>
 
+                <section>
+                    <h2>The Story So Far</h2>
+                    Sorting a list of people by surname
+					<pre><code class="java">
+// Java 7
+List&lt;Person&gt; people = ...
+Collections.sort(people, new Comparator&lt;Person&gt;() {
+    public int compare(Person x, Person y) {
+        return x.getLastName().compareTo(y.getLastName());
+    }
+});
+
+// Java 8
+Collections.sort(people, Comparator.comparing(p -> p.getLastName()));
+sort(people, comparing(Person::getLastName));
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h2>Interface Changes</h2>
+                    <ul>
+                        <li>Default methods</li>
+                        <li>Static methods</li>
+                        <li>Allows interface evolution</li>
+                        <li>Multiple inheritance without state</li>
+                        <li>Collection: forEach, stream, parallelStream, removeIf, spliterator</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Function</h2>
+                 <pre><code class="java">
+
+package java.util.function;
+
+@FunctionalInterface
+public interface Function &lt;T, R&gt;  {
+    R apply(T t);
+    default &lt;V&gt; Function&lt;T,V&gt; andThen(Function&lt;? super R,? extends V&gt; after) {
+        return (T t) -> after.apply(apply(t));
+    }
+    default &lt;V&gt; Function&lt;V,R&gt; compose(Function&lt;? super V,? extends T&gt; before) {
+         return (V v) -> apply(before.apply(v));
+    }
+    static default &lt;T&gt; Function&lt;T,T&gt; identity() {
+         return t -> t;
+    }
+}
+
+             </code></pre>
+
+                </section>
+
+                <section>
+                    <h2>Function Composition</h2>
+                    <img src="images/compose.png"/>
+                </section>
+
+                <section>
+                    <h2>Function Usage</h2>
+<pre><code class="java">
+
+    @Test
+    public void testAndThen() {
+        Function&lt;Integer, Integer&gt; f = i -> i + 1;
+        assertTrue(f.andThen(j -> j * 2).apply(2) == 6);
+    }
+</code></pre>
+                </section>
+
+                <section>
+                    <h2>Interface Conflicts</h2>
+                    <ul>
+                        <li>Same method twice</li>
+                        <li>Rules:
+                            <ul>
+                                <li>Classes win</li>
+                                <li>Most specific default</li>
+                                <li>May need to resolve manually</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Conflict</h2>
+
+<pre><code class="java">
+
+    public interface A {
+        default void hello() { System.out.println("Hello World from A"); }
+    }
+
+    public interface B {
+        default void hello() { System.out.println("Hello World from B"); }
+    }
+
+    public class C implements A, B {
+
+    }
+
+    // Error: class C inherits unrelated defaults for hello() from
+    // types A and B reference to hello is ambiguous,
+    // both method hello() in A and method hello() in B match.
+</code></pre>
+                </section>
+
+
+                <section>
+                    <h2>Resolution</h2>
+<pre><code class="java">
+
+    public interface A {
+        default void hello() { System.out.println("Hello World from A"); }
+    }
+
+    public interface B {
+        default void hello() { System.out.println("Hello World from B"); }
+    }
+
+    public class C implements A, B {
+        public void hello() {
+            A.super.hello();
+        }
+    }
+
+</code></pre>
+                </section>
+
+                <section>
+                    <h2>Diamond Problem</h2>
+                    <img src="images/diamond.png" border="0"/>
+                </section>
+
+                <section>
+                    <h2>Streams</h2>
+                    <ul>
+                        <li>Parallelisable sequences</li>
+                        <li>Common higher order functions: filter, map, fold(reduce/collect)</li>
+                        <li>Explicit conversions from Collection to Stream</li>
+                        <li>Streams are <strong>not</strong> Streams: co-inductive, lazy, potentially infinite lists</li>
+                    </ul>
+                    <pre><code class="java">
+shapes.stream()
+    .filter(s -> s.getColor() == BLUE)
+    .forEach(s -> s.setColor(RED));
+List&lt;Shape&gt; blue = shapes.stream()
+    .filter(s -> s.getColor() == BLUE)
+    .collect(Collectors.toList());
+Set&lt;Box&gt; hasBlueShape = shapes.stream()
+    .filter(s -> s.getColor() == BLUE)
+    .map(s -> s.getContainingBox())
+    .collect(Collectors.toSet());
+                        </code></pre>
+
+
+                </section>
+
+                <section>
+                    <h2>Parallelism</h2>
+                    <ul>
+                        <li>Stream sequential by default</li>
+                        <li>Avoid mutating values</li>
+                        <li>Explicit parallelism</li>
+                    </ul>
+                    <pre><code class="java">
+int sum = shapes.parallelStream()
+    .filter(s -> s.getColor() == BLUE)
+    .mapToInt(s -> s.getWeight())
+    .sum();
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h2>Core Stream Methods</h2>
+                    <pre><code class="java">
+// forEach(Consumer)
+employees.stream().forEach(e -> e.setSalary(e.getSalary() * 1.1);
+
+// map(Function)
+ids.stream().map(EmployeeUtils::findEmployeeById)
+
+// filter(Predicate)
+employees.stream().filter(e -> e.getSalary() > 5000);
+
+// findFirst()
+employees.stream().filter(...).findFirst().orElse(GOTO_EMPLOYEE);
+
+// reduce(initialValue, BinaryOperator)
+nums.stream().reduce(Double.MIN_VALUE, Double::max)
+                        </code></pre>
+                </section>
+
+                <section>
+                    <h2>Stream (vs Collections)</h2>
+                    <ul>
+                        <li>Don't store values</li>
+                        <li>Nature is functional</li>
+                        <li>Usually lazy</li>
+                        <li>Potentially infinite</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Separate Stream?</h2>
+                    <ul>
+                        <li>Early versions had methods on Collection and Iterable</li>
+                        <li>Confusion in mutation vs functional</li>
+                        <li>Lazy vs eager mode</li>
+                        <li>Name collisions with Collection</li>
+                        <li>Tranformation needed for parallelism</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Terminal Operations</h2>
+                    <ul>
+                        <li>zero or more intermediate operations</li>
+                        <li>concat, distinct, filter, flatMap, limit, map, skip</li>
+                        <li>one terminal operation</li>
+                        <li>foreach, forEachOrdered, toArray, reduce, collect, min, max, count, anyMatch, allMatch, noneMatch, findFirst, findAny</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Optional</h2>
+                    <ul>
+                        <li>Type with zero or one value</li>
+                        <li>of, filter, flatMap, map, orElse</li>
+                        <li>Lots of imperative methods too</li>
+                    </ul>
+                    <pre><code class="java">
+Optional&lt;Shape&gt; firstBlue = shapes.stream()
+    .filter(s -> s.getColor() == BLUE)
+    .findFirst();
+                        </code></pre>
+            </section>
+
+
+                <section>
+                    <h2>Java 7 Example</h2>
+                    Find the names of albums that have at least one track rated four or higher, sorted by name.
+ <pre><code class="java">
+ List&lt;Album&gt; favs = new ArrayList&lt;&gt;();
+ for (Album a : albums) {
+     boolean hasFavorite = false;
+     for (Track t : a.tracks) {
+         if (t.rating >= 4) {
+             hasFavorite = true;
+             break;
+         }
+     }
+     if (hasFavorite) { favs.add(a); }
+}
+Collections.sort(favs, new Comparator&lt;Album&gt;() {
+     public int compare(Album a1, Album a2) {
+         return a1.name.compareTo(a2.name);
+}});
+
+     </code></pre>
+                </section>
+
+                <section>
+                    <h2>Java 8 Example</h2>
+                    Find the names of albums that have at least one track rated four or higher, sorted by name.
+                <pre><code class="java">
+List&lt;Album&gt; sortedFavs = albums.stream()
+    .filter(a -> a.tracks.stream().anyMatch(t -> (t.rating >= 4)))
+    .sorted(Comparator.comparing(a -> a.name))
+    .collect(Collectors.toList());
+                    </code></pre>
+
+                </section>
+
 				<section>
-					<h2>Targets</h2>
-
-					<ul>
-						<li>Method or constructor arguments</li>
-						<li>Variables declarations</li>
-						<li>Return statments</li>
-						<li>Assignments</li>
-						<li>Array initializer</li>
-						<li>Lambda expression bodies</li>
-						<li>Ternary operator (?:) </li>
-						<li>Casts</li>
-					</ul>
-
-				</section>
-
-				<section>
-					<h2>Default Methods</h2>
-
-					<ul>
-						<li>Interfaces can have implementations</li>
-						<li>Multiple inheritance without state</li>
-					</ul>
-
-				</section>
-
-				<section>
-					<h2>Not covered</h2>
+					<h2>Miscellaneous</h2>
 					<ol>
 						<li>Lexical Scoping</li>
 						<li>Variable Capture</li>
-						<li>Method references</li>
+						<li>Method references (constructor, instance, static)</li>
+                        <li>Lambdas are objects</li>
 					</ol>
 
 				</section>
 
-				<section>
-					<h2>Afterword</h2>
-					<ul>
-						<li>Functional Programming in Scala, Chiusano and Bjarnason</li>
-						<li>Chapter 4, Handling Errors Without Exceptions</li>
-					</ul>
-					<center>
-						<table cellspacing="40">
-							<tr>
-								<td ><img src="../../images/scala_book.png" height="150"></td>
-								<td><img src="../../images/author_small.png" height="150"></td>
-								<td><img src="../../images/lambda_thin.png" height="150"></td>
-							</tr>
-						</table>
-					</center>
+                <section>
+                    <h2>Where's my Monad?</h2>
+                    <ul>
+                        <li>Lots of flatMap, but no monads</li>
+                        <li>unit: a -> M a</li>
+                        <li>flatMap: M a -> (a -> M b) -> M b</li>
+                        <li>No abstraction over unit</li>
+                        <li>Re-implementation</li>
+                    </ul>
+                    <p>
+                        <small>Adding Type Constructor Parameterization to Java, http://www.jot.fm/issues/issue_2008_06/article2.pdf</small>
+                    </p>
+                             <pre><code class="java">
+// Warning: invalid Java
+public interface Monad&lt;M&lt;A&gt;&gt; {
+    M&lt;A&gt; unit(A a);
+    &lt;B&gt; M&lt;B&gt; flatMap(M&lt;A&gt; ma, F&lt;A, M&lt;B&gt;&gt; f);
+}
+                             </code></pre>
 
-					<p>
-						<small>
-							Created by Mark Perry,
-							<a href="http://twitter.com/mprry">@mprry</a>,
-							<a href="https://plus.google.com/u/0/103753917802203497881/about/p/pub">G+</a>,
-							<a href="http://mperry.github.io/">Blog</a>,
-							<a href="http://www.linkedin.com/in/maperry78">LinkedIn</a>,
-							<a href="https://github.com/mperry">GitHub</a>,
-							maperry78@yahoo.com.au
-						</small>
-					</p>
+                </section>
 
-				</section>
+                <section>
+                    <h2>Functional Libraries</h2>
+                    <ul>
+                        <li>Functional Java</li>
+                        <li>Totally Lazy</li>
+                        <li>Google Guava</li>
+                    </ul>
+                </section>
 
+                <section>
+                    <h2>Functional Java</h2>
+                    <ul>
+                        <li>Immutable: lists, lazy list, set</li>
+                        <li>Function arities 1 to 8</li>
+                        <li>Sum types: Option, Either, Validation</li>
+                        <li>Product types 1 to 8</li>
+                        <li>Quickcheck specification based testing</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Functional Groovy</h2>
+                    <ul>
+                        <li>Simple Lenses</li>
+                        <li>Reader, Writer and State monads</li>
+                        <li>IO type</li>
+                        <li>Monad library</li>
+                        <li>Monad comprehensions</li>
+                        <li>Y Combinator</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Next Steps</h2>
+                    <ul>
+                        <li>Brisbane Functional Programming Group</li>
+                        <li>Investigate FunctionalJava</li>
+                        <li>Learn Haskell or Scala</li>
+                        <li>Books:
+                            <ul>
+                                <li>Learn You A Haskell for Great Good</li>
+                                <li>Functional Programming in Scala</li>
+                            </ul>
+                        </li>
+
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Summary</h2>
+                    <ul>
+                        <li>Lambda expressions</li>
+                        <li>Functional interfaces</li>
+                        <li>Default methods</li>
+                        <li>Stream</li>
+                        <li>Library support</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>References</h2>
+                    <ul>
+                        <li>Project Lambda - openjdk.java.net/projects/lambda</li>
+                        <li>Lambda FAQ - www.lambdafaq.org</li>
+                        <li>Everything about Java 8 - www.techempower.com/blog/2013/03/26/everything-about-java-8/</li>
+                        <li>Lambda: A peek under the hood - http://www.parleys.com/play/5251c164e4b0a43ac1212459/about </li>
+                        <li>Stream in Top Gear - http://parleys.com/play/5251c7d6e4b0a43ac121245b/about</li>
+                        <li>Lots of Java One videos!</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Thank You</h2>
+                </section>
 
 			</div>
 
